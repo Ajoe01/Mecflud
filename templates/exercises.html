@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Cuestionario (responde todas y envía al final)</h2>
+
+  <form id="all-quiz-form" method="POST" action="{{ url_for('submit_all') }}">
+    {% for e in exercises %}
+      <div class="exercise-card" id="qcard-{{ e.id }}">
+        <h3>{{ e.id }}. {{ e.titulo }}</h3>
+        <p>{{ e.enunciado }}</p>
+
+        <div class="options">
+          {% for key, val in e.opciones.items() %}
+            <label class="opt">
+              <input
+                type="radio"
+                name="q-{{ e.id }}"
+                value="{{ key }}"
+                {% if loop.first %}required{% endif %}  <!-- fuerza elegir una -->
+              >
+              <span><b>{{ key }})</b> {{ val }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <button type="submit" class="primary">Enviar todo</button>
+  </form>
+</div>
+
+<!-- Pasamos el listado para validación JS -->
+<script>
+  window.QUIZ = {{ exercises|tojson }};
+</script>
+{% endblock %}

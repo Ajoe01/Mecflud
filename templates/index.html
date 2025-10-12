@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<section class="hero card">
+  <h2>Bienvenido al Laboratorio Virtual de Mecánica de Fluidos</h2>
+  <p class="muted">
+    Explora, estudia y practica los principios fundamentales de la mecánica de fluidos. 
+    Aquí podrás resolver cuestionarios interactivos y recibir retroalimentación inmediata 
+    para reforzar tu comprensión teórica y aplicada.
+  </p>
+  <ul class="muted">
+    <li><b>Presión hidrostática:</b> \( p = \rho g h \)</li>
+    <li><b>Número de Reynolds:</b> \( \mathrm{Re} = \dfrac{V D}{\nu} = \dfrac{\rho V D}{\mu} \)</li>
+    <li><b>Ecuación de Bernoulli:</b> \( \dfrac{p}{\rho g} + \dfrac{V^2}{2g} + z = \text{cte} \)</li>
+    <li><b>Pérdida de carga (Darcy–Weisbach):</b> \( h_f = f \, \dfrac{L}{D} \, \dfrac{V^2}{2g} \)</li>
+  </ul>
+</section>
+
+<div class="tools-grid">
+  <div class="tool-card">
+    <h3>¿Cómo funciona?</h3>
+    <ol>
+      <li>Regístrate e inicia sesión con tu usuario.</li>
+      <li>Dirígete a <b>Preguntas</b> y responde el cuestionario completo.</li>
+      <li>Envía tus respuestas y revisa tus resultados personales y globales.</li>
+    </ol>
+    <p class="muted small">
+      Recuerda: trabaja siempre en <b>unidades del Sistema Internacional (SI)</b> 
+      y realiza un <b>esquema</b> antes de comenzar los cálculos.
+    </p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Presión Hidrostática</h3>
+    <p><b>Fórmula:</b> \( p = \rho g h \)</p>
+    <p><b>Variables (SI):</b> \( \rho \)[kg/m³], \( g \)[m/s²], \( h \)[m], \( p \)[Pa]</p>
+    <p><b>Notas:</b> Para presión absoluta, usa \( p_\text{abs} = p_\text{atm} + p \).
+       La fuerza sobre una superficie se calcula como \( F = p_\text{centroide} A \).</p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Número de Reynolds</h3>
+    <p><b>Definición:</b> \( \mathrm{Re} = \dfrac{V D}{\nu} = \dfrac{\rho V D}{\mu} \)</p>
+    <p><b>Regímenes:</b></p>
+    <ul>
+      <li>Laminar: \( \mathrm{Re} < 2000 \)</li>
+      <li>Transicional: \( 2000 \le \mathrm{Re} \le 4000 \)</li>
+      <li>Turbulento: \( \mathrm{Re} > 4000 \)</li>
+    </ul>
+    <p><b>Referencia:</b> Para agua a 20 °C, \( \nu \approx 1.0 \times 10^{-6} \, \text{m}^2/\text{s} \).</p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Pérdida de Carga (Darcy–Weisbach)</h3>
+    <p><b>Fórmula general:</b> \( h_f = f \, \dfrac{L}{D} \, \dfrac{V^2}{2g} \)</p>
+    <p><b>Coeficiente de fricción:</b></p>
+    <ul>
+      <li>Flujo laminar: \( f = \dfrac{64}{\mathrm{Re}} \)</li>
+      <li>Flujo turbulento (Haaland): 
+        \( \dfrac{1}{\sqrt{f}} = -1.8 \log_{10} \Big[ \big(\dfrac{\varepsilon / D}{3.7}\big)^{1.11} + \dfrac{6.9}{\mathrm{Re}} \Big] \)
+      </li>
+    </ul>
+    <p><b>Uso:</b> Se combina con Bernoulli para analizar pérdidas de energía en tuberías.</p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Ecuación de Bernoulli con pérdidas y bombas</h3>
+    <p>
+      \( \dfrac{p_1}{\rho g} + \dfrac{V_1^2}{2g} + z_1 + h_\text{bomba}
+      - h_f - h_\text{menores} =
+      \dfrac{p_2}{\rho g} + \dfrac{V_2^2}{2g} + z_2 \)
+    </p>
+    <p class="muted small">
+      Define un plano de referencia \( z = 0 \), aplica signos coherentes 
+      y usa siempre el mismo sistema de unidades.
+    </p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Superficie Libre e Inclinación</h3>
+    <p>En rotación o inclinación, la superficie libre es siempre perpendicular al campo de aceleración resultante \( \vec{g}' \).</p>
+    <p>Para un tanque inclinado: \( \Delta h = L \tan\theta \).</p>
+    <p>En rotación: \( z(r) = z_0 + \dfrac{\omega^2 r^2}{2g} \).</p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Impacto de Chorro</h3>
+    <p>Se aplica conservación de cantidad de movimiento:</p>
+    <p>\( F = \dot{m}(V_{\text{sal}} - V_{\text{ent}}) \), con \( \dot{m} = \rho A V \).</p>
+    <p>Si el chorro se detiene en seco: \( F = \rho A V^2 \).</p>
+    <p class="muted small">Esta ecuación se usa en ensayos de chorros y soportes impactados.</p>
+  </div>
+
+  <div class="tool-card">
+    <h3>Consejos para Resolver el Quiz</h3>
+    <ul>
+      <li>Lee cuidadosamente el enunciado antes de calcular.</li>
+      <li>Identifica las variables conocidas y las incógnitas.</li>
+      <li>Aplica la ecuación adecuada y revisa tus unidades.</li>
+      <li>Comprueba que el resultado tenga sentido físico.</li>
+      <li>Si tienes dudas, consulta la sección de <b>Teoría</b> o <b>Recursos</b>.</li>
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
