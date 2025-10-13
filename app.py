@@ -114,6 +114,25 @@ def ensure_utf8(response):
         ctype = response.headers.get('Content-Type', '')
         if 'text/html' in ctype and 'charset' not in ctype:
             response.headers['Content-Type'] = ctype + '; charset=utf-8'
+        # Inyectar estilos mínimos para permitir scroll en móvil en la página de resultados
+        try:
+            from flask import request as _flask_request
+            path = getattr(_flask_request, 'path', '')
+            if path and path.startswith('/results') and 'text/html' in ctype:
+                html = response.get_data(as_text=True)
+                inject_css = """
+    <style id="mobile-results-fix">
+    /* Permitir scroll en móvil para la página de resultados */
+    html, body { height:100%; overflow:auto !important; -webkit-overflow-scrolling: touch !important; }
+    /* Selecciona contenedores comunes que podrían estar bloqueando el scroll */
+    .results-container, .cards, .card-list, .container, #main, .content { overflow-y:auto !important; -webkit-overflow-scrolling: touch !important; max-height:100vh !important; }
+    </style>
+    """
+                if '</head>' in html:
+                    html = html.replace('</head>', inject_css + '</head>')
+                    response.set_data(html)
+        except Exception:
+            pass
     except Exception:
         pass
     return response
