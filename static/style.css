@@ -97,6 +97,11 @@ nav a:hover{
 .exercise-card{ padding:18px; margin:16px 0 }
 .result-summary{ padding:20px; margin:16px 0 28px }
 
+/* En escritorio queremos que las tarjetas de resultados no recorten su contenido
+  (se usa overflow:auto en móvil). Esto sobrescribe la regla genérica de .card
+  que ponía `overflow: hidden;` y evita cortar el contenido dentro de la tarjeta. */
+.result-summary { overflow: visible; }
+
 h2{ margin:0 0 10px; font-size: clamp(20px,3.4vw,28px) }
 h3{ margin:0 0 8px; font-size: clamp(16px,3vw,20px) }
 .muted{ color:var(--muted) }
@@ -487,3 +492,25 @@ body {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
+/* ===== FIX: permitir scroll en móvil para la vista de resultados ===== */
+/* La clase usada en templates/results.html es .result-summary
+   y en resultsb.html es .result. Aquí forzamos overflow-auto
+   y scrolling suave en pantallas pequeñas para evitar que las
+   tarjetas queden "bloqueadas" sin poder hacer scroll. */
+@media (max-width: 900px) {
+  .result-summary, .result {
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-height: calc(100vh - 140px) !important; /* deja espacio para header/nav */
+  }
+  /* Permitir que las tablas dentro de resultados hagan scroll horizontal/vertical en móviles */
+  .res-table {
+    display: block;
+    width: 100%;
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100%;
+  }
+}
+
