@@ -78,6 +78,19 @@ nav a:hover{
   border:1px solid var(--line);
   border-radius: var(--radius);
   box-shadow: var(--shadow-1);
+  width: auto;
+  max-width: min(max-content, calc(100vw - 2rem));
+  box-sizing: border-box;
+  /* Recortar cualquier contenido que sobresalga del borde de la tarjeta */
+  overflow: hidden;
+  position: relative;
+}
+/* Ecuaciones en display: permitir scroll horizontal suave si son muy anchas */
+.math-wrap {
+  display:block;
+  overflow-x:auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: .25rem;
 }
 .card{ padding:22px }
 .tool-card{ padding:18px }
