@@ -9,8 +9,9 @@ from utils.models import Attempt
 from utils.exercises_data import exercises# app.py (encima de las rutas o donde tengas otros @app.route)
 from flask import send_from_directory
 from utils.models import Attempt, ForumPost
+import subprocess, sys
 
-
+ADMIN_RESET_KEY = os.getenv("ADMIN_RESET_KEY", "dev-reset")
 
 # ---------- DB PATH ABSOLUTO ----------
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
@@ -362,6 +363,62 @@ def api_nav_flags():
         has_attempt = False
 
     return jsonify({'lock_Q': lock_Q, 'has_attempt': bool(has_attempt)})
+
+# ============================================================
+# RUTA MANUAL: /reset-user  → ejecuta scripts/reset_users.py
+# y luego hace un POST interno a la raíz ('/')
+# ============================================================
+import subprocess, sys, os
+from flask import request, redirect, url_for, flash, current_app
+
+ADMIN_RESET_KEY = os.getenv("ADMIN_RESET_KEY", "dev-reset")
+
+@app.route("/reset-user")
+def manual_reset_users():
+    """
+    Permite reiniciar usuarios ejecutando el script reset_users.py
+    y luego realiza un POST automático hacia '/'.
+
+    FUNCIONA DESDE:
+      🖥 Local: http://127.0.0.1:5000/reset-user
+      🌐 Render: https://mecflud.onrender.com/reset-user?key=TU_TOKEN
+
+    - En local no requiere clave.
+    - En producción exige ?key=ADMIN_RESET_KEY.
+    - No crea usuarios nuevos ni altera más archivos.
+    """
+    ip = request.remote_addr or ""
+    key = request.args.get("key", "")
+    host = request.host or ""
+
+    is_local = ip in ("127.0.0.1", "::1")
+    is_render = "mecflud.onrender.com" in host
+
+    # Seguridad básica
+    if not (is_local or (is_render and key == ADMIN_RESET_KEY)):
+        return "🚫 Acceso no autorizado.", 403
+
+    try:
+        # Ejecuta el script de reseteo
+        subprocess.run(
+            [sys.executable, "scripts/reset_users.py"],
+            capture_output=True, text=True, check=True
+        )
+
+        # Flash opcional para debug visual
+        flash("✅ Usuarios reiniciados correctamente.", "success")
+
+        # POST interno hacia la ruta raíz ('/')
+        with current_app.test_client() as client:
+            client.post(url_for("index"))
+
+        # Redirige al inicio
+        return redirect(url_for("index"))
+
+    except subprocess.CalledProcessError as e:
+        flash("❌ Error al ejecutar reset_users.py", "danger")
+        return redirect(url_for("index"))
+
 
 # ------------------- ARRANQUE -------------------
 if __name__ == '__main__':
