@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card-img">
+  <h2>Recursos Académicos de Mecánica de Fluidos</h2>
+  <ul class="resources-row">
+    <li class="resource">
+      <a href="https://www.sciencedirect.com/book/9780123821003/fluid-mechanics" target="_blank">
+        <img src="https://ars.els-cdn.com/content/image/3-s2.0-C20090634103-cov200h.gif" alt="Fluid Mechanics">
+      </a>
+      <h3 class="caption">Fluid Mechanics</h3>
+    </li>
+
+    <li class="resource">
+      <a href="https://ocw.mit.edu/courses/mechanical-engineering/2-25-advanced-fluid-mechanics-fall-2013/" target="_blank">
+        <img src="https://ocw.mit.edu/courses/2-25-advanced-fluid-mechanics-fall-2013/fe0b243e81452333f3abd2b462058f44_2-25f13.jpg" alt="Advanced Fluid Mechanics">
+      </a>
+      <h3 class="caption">Advanced Fluid Mechanics</h3>
+    </li>
+
+    <li class="resource">
+      <a href="https://www.youtube.com/watch?v=1XDMh_pvtoI" target="_blank">
+        <img src="{{ url_for('static', filename='video.png') }}" alt="Video">
+      </a>
+      <h3 class="caption">Fluid Mechanics (video)</h3>
+    </li>
+
+    <li class="resource">
+      <a href="https://repositorio.unal.edu.co/handle/unal/51756" target="_blank">
+        <img src="https://bffrepositorio.unal.edu.co/server/api/core/bitstreams/c0ac640b-5217-4242-9885-a8b6e30dea2c/content" alt="Modelación">
+      </a>
+      <h3 class="caption">Modelación de la temperatura de un embalse usando modelos de lattice Boltzmann</h3>
+    </li>
+  </ul>
+</div>
+{% endblock %}

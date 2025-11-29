@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="result-summary">
+  <h2>Resultados globales</h2>
+  <table class="res-table">
+    <thead>
+      <tr><th>Usuario</th><th>Calificación</th><th>Fecha</th></tr>
+    </thead>
+    <tbody>
+      {% for r in tabla %}
+        <tr>
+          <td>{{ r.username }}</td>
+          <td>{{ r.score }}/{{ r.total }}</td>
+          <td>{{ r.fecha }}</td>
+        </tr>
+      {% endfor %}
+      {% if not tabla %}
+        <tr><td colspan="3">Aún no hay envíos.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v=2">
+  <title>Mecflud</title>  
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}?v={{ css_v|default('') }}">
+  <!-- (Opcional) MathJax si usas fórmulas -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']],
+        processEscapes: true
+      },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+  <!-- Navegación fija con visibilidad solicitada -->
+  <nav id="main-nav">
+    <a href="{{ url_for('index') }}">Inicio</a>
+    <a href="{{ url_for('recursos') }}">Recursos</a>
+
+    {% if current_user.is_authenticated %}
+      {# Mostrar siempre el enlace 'Preguntas' en la navegación para que el usuario pueda volver a la sección. #}
+      <a id="nav-preguntas" class="nav-preguntas" href="{{ url_for('exercises_page') }}">Preguntas</a>
+      <a href="{{ url_for('results') }}">Resultados</a>
+      <a href="{{ url_for('foro') }}">Foro</a>
+      <a href="{{ url_for('logout') }}">Cerrar sesión</a>
+    {% else %}
+      <a href="{{ url_for('resultsb') }}">Resultados</a>
+      <a href="{{ url_for('register') }}">Registro</a>
+      <a href="{{ url_for('login') }}">Iniciar sesión</a>
+      <a href="{{ url_for('nosotros') }}">Nosotros</a>
+    {% endif %}
+  </nav>
+
+  <main class="content">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for m in messages %}
+          <div class="card" style="max-width:900px; margin-inline:auto;">{{ m }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+<script src="{{ url_for('static', filename='scripts.js') }}?v={{ js_v|default('') }}" defer></script>
+</body>
+</html>
