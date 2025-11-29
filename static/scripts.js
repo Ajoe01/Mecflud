@@ -59,8 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Al enviar, limpiar almacenamiento
-  form.addEventListener('submit', () => localStorage.clear());
+  // Al enviar: marcar sesión como bloqueada para este quiz (no limpiar localStorage)
+  form.addEventListener('submit', (e) => {
+    try {
+      // Marcar bloqueo sólo para este quiz (usa el id del form si existe)
+      const key = `quiz_blocked_${form.id || 'all'}`;
+      sessionStorage.setItem(key, '1');
+    } catch (err) {
+      // si falla sessionStorage, no impedimos el envío
+    }
+    // permitir que el formulario siga su flujo normal (ir a resultados)
+  });
 });
 // Validación de faltantes antes de enviar (además del backend)
 document.addEventListener('DOMContentLoaded', () => {
@@ -87,36 +96,29 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Ocultar enlace 'Preguntas' en la navegación si el servidor indica lock_Q o has_attempt
+// Manejo de bloqueo de respuestas en la sesión: al cargar la página deshabilitar inputs si está bloqueado
 document.addEventListener('DOMContentLoaded', () => {
-  // Intentar obtener flags del servidor
-  fetch('/api/nav_flags', { credentials: 'same-origin' })
-    .then(r => {
-      if (!r.ok) throw new Error('no-json');
-      return r.json();
-    })
-    .then(data => {
-      const hide = (data.lock_Q === 1) || Boolean(data.has_attempt);
-      if (!hide) return;
+  const form = document.getElementById('all-quiz-form');
+  if (!form) return;
 
-      // Buscar enlaces que apunten a /exercises o cuyo texto sea 'Preguntas'
-      const navLinks = Array.from(document.querySelectorAll('a'));
-      for (const a of navLinks) {
-        try {
-          const href = a.getAttribute('href') || '';
-          const txt = (a.textContent || '').trim().toLowerCase();
-          if (href.endsWith('/exercises') || txt === 'preguntas') {
-            // Ocultar el elemento de lista padre si existe, si no, ocultar el enlace
-            const li = a.closest('li');
-            if (li) li.style.display = 'none';
-            else a.style.display = 'none';
-          }
-        } catch (e) {
-          // ignora
+  const key = `quiz_blocked_${form.id || 'all'}`;
+  if (sessionStorage.getItem(key) === '1') {
+    // Deshabilitar todos los controles del formulario para que no se puedan cambiar
+    for (const el of form.elements) {
+      try {
+        if (el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el instanceof HTMLElement) {
+          el.disabled = true;
         }
+      } catch (e) {
+        // ignore
       }
-    })
-    .catch(() => {
-      // Si falla la petición no hacemos nada
-    });
+    }
+
+    // Mostrar un aviso arriba del formulario indicando que las respuestas están bloqueadas
+    const banner = document.createElement('div');
+    banner.className = 'quiz-blocked-banner';
+    banner.textContent = 'Respuestas bloqueadas. Puedes verlas pero no modificarlas.';
+    banner.style.cssText = 'background:#fff3cd;border:1px solid #ffe08a;padding:10px;margin-bottom:10px;border-radius:4px;color:#856404;font-weight:600;';
+    form.parentNode && form.parentNode.insertBefore(banner, form);
+  }
 });
