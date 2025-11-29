@@ -28,12 +28,8 @@
     <a href="{{ url_for('recursos') }}">Recursos</a>
 
     {% if current_user.is_authenticated %}
-      {# El enlace 'Preguntas' se oculta cuando el backend marca que el usuario ya envió respuestas.
-         `inject_nav_flags` inyecta `lock_Q` (0/1) y `has_attempt` en el contexto.
-         Preferimos usar `lock_Q` que proviene de la sesión o del usuario autenticado. #}
-      {% if lock_Q == 0 %}
-        <a id="nav-preguntas" class="nav-preguntas" href="{{ url_for('exercises_page') }}">Preguntas</a>
-      {% endif %}
+      {# Mostrar siempre el enlace 'Preguntas' en la navegación para que el usuario pueda volver a la sección. #}
+      <a id="nav-preguntas" class="nav-preguntas" href="{{ url_for('exercises_page') }}">Preguntas</a>
       <a href="{{ url_for('results') }}">Resultados</a>
       <a href="{{ url_for('foro') }}">Foro</a>
       <a href="{{ url_for('logout') }}">Cerrar sesión</a>
