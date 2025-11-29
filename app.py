@@ -242,13 +242,8 @@ def logout():
 @app.route('/exercises')
 @login_required
 def exercises_page():
-    # Si la sesión indica que ya envió respuestas, redirige inmediatamente
-    if session.get('lock_Q', 0) == 1:
-        return redirect(url_for('results'))
-
-    ya = Attempt.query.filter_by(user_id=current_user.id).first()
-    if ya:
-        return redirect(url_for('results'))
+    # Permitir que el usuario vea la página de ejercicios incluso si ya envió.
+    # El servidor seguirá previniendo reenvíos en /submit.
     return render_template('exercises.html', exercises=exercises)
 
 
