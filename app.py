@@ -444,4 +444,4 @@ if __name__ == '__main__':
         except Exception:
             pass
         db.create_all()
-    app.run(debug=True,  port=5100)
+
